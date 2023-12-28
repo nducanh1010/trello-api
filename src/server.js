@@ -2,7 +2,8 @@ import express from "express";
 import { CONNECT_DB, GET_DB } from "~/config/mongodb";
 import { env } from "~/config/environment";
 import "dotenv/config";
-import { APIS_V1 } from "./routes/v1";
+import { APIS_V1 } from "~/routes/v1";
+import { errorHandlingMiddleware } from "~/middlewares/errorHandlingMiddleware";
 const START_SERVER = () => {
   const app = express();
   // cho phép parse json ( enable parse req.body.json data)
@@ -14,6 +15,10 @@ const START_SERVER = () => {
     res.end("<h1>Hello World!</h1><hr>");
   });
 
+  /*
+    Middleware xử lí lỗi tập trung
+  */
+  app.use(errorHandlingMiddleware)
   app.listen(env.APP_PORT, env.APP_HOST, () => {
     console.log(env.APP_PORT);
   });
