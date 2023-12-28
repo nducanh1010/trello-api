@@ -14,7 +14,7 @@ export const CONNECT_DB = async () => {
   // gọi kết nối tới mongodb atlas với uri
   await mongoClientInstance.connect();
   // KẾT NỐI OK lấy databasse theo tên
-  databaseTrelloInstance = mongoClientInstance.db(env.DB_NAME);
+  databaseTrelloInstance = mongoClientInstance.db(env.DATABASE_NAME);
 };
 // chỉ gọi hàm này sau khi conenct db thành công
 export const GET_DB = () => {
