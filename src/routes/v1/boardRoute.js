@@ -10,5 +10,6 @@ Router.route("/")
       .json({ message: "API Get list boards", code: StatusCodes.OK });
   })
   // chạy từ tầng route => validation => controller => service
-  .post(boardValidation.createNew,boardController.createNew);
+  .post(boardValidation.createNew, boardController.createNew);
+Router.route("/:id").get(boardController.getDetails).put();
 export const boardRoutes = Router;
