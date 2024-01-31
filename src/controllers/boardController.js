@@ -4,7 +4,6 @@ import ApiError from "~/utils/ApiError";
 
 const createNew = async (req, res, next) => {
   try {
-    console.log("req query", req.query);
     // throw new ApiError(StatusCodes.BAD_REQUEST, "erroe from bCtrl");
     //Điều hướng dữ liệu sang tầng service
     const createdNewBoard = await boardService.createNew(req.body);
@@ -18,7 +17,7 @@ const getDetails = async (req, res, next) => {
   try {
     const boardId = req.params.id;
     const detailBoard = await boardService.getDetails(boardId);
-    res.status(StatusCodes.OK).json({ detailBoard });
+    res.status(StatusCodes.OK).json(detailBoard);
   } catch (error) {
     next(error);
   }
