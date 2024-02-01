@@ -1,7 +1,7 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { boardController } from "~/controllers/boardController";
-import { boardValidation, createNew } from "~/validations/boardValidations";
+import { boardValidation } from "~/validations/boardValidations";
 const Router = express.Router();
 Router.route("/")
   .get((req, res) => {
