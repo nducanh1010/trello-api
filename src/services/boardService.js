@@ -9,7 +9,7 @@ const createNew = async (reqBody) => {
   try {
     const newBoard = {
       ...reqBody,
-      slug: slugify(reqBody.title),
+      slug: slugify(reqBody.title)
     };
     // Gọi tầng model để xử lí lưu bản ghi vào trong db
     const createdBoard = await boardModel.createNew(newBoard);
@@ -31,7 +31,7 @@ const getDetails = async (boardId) => {
     //euquals do mongo db ho tro
     resBoard.columns = resBoard.columns.map((column) => ({
       ...column,
-      cards: resBoard.cards.filter((card) => card.columnId.equals(column._id)),
+      cards: resBoard.cards.filter((card) => card.columnId.equals(column._id))
     }));
     delete resBoard.cards;
     return resBoard;
@@ -39,7 +39,21 @@ const getDetails = async (boardId) => {
     throw error;
   }
 };
+const update = async (boardId, reqBody) => {
+  try {
+    const updateData = {
+      ...reqBody,
+      updatedAt: Date.now()
+    };
+    const updatedBoard = await boardModel.update(boardId, updateData);
+
+    return updatedBoard;
+  } catch (error) {
+    throw error;
+  }
+};
 export const boardService = {
   createNew,
   getDetails,
+  update
 };

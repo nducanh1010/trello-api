@@ -11,5 +11,7 @@ Router.route("/")
   })
   // chạy từ tầng route => validation => controller => service
   .post(boardValidation.createNew, boardController.createNew);
-Router.route("/:id").get(boardController.getDetails).put();
+Router.route("/:id")
+  .get(boardController.getDetails)
+  .put(boardValidation.update, boardController.update);
 export const boardRoutes = Router;

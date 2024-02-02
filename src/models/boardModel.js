@@ -16,13 +16,14 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
   createdAt: Joi.date().timestamp("javascript").default(Date.now),
-  _destroy: Joi.boolean().default(false), //soft_delete
+  _destroy: Joi.boolean().default(false) //soft_delete
 });
 const validateModel = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, {
-    abortEarly: false,
+    abortEarly: false
   });
 };
+const INVALID_UPDATE_FIELDS = ["_id", "_createdAt"];
 const createNew = async (data) => {
   try {
     const validData = await validateModel(data);
@@ -50,25 +51,25 @@ const getDetails = async (id) => {
         {
           $match: {
             _id: new ObjectId(id),
-            _destroy: false,
-          },
+            _destroy: false
+          }
         },
         {
           $lookup: {
             from: columnModel.COLUMN_COLLECTION_NAME,
             localField: "_id",
             foreignField: "boardId",
-            as: "columns", // tu defined
-          },
+            as: "columns" // tu defined
+          }
         },
         {
           $lookup: {
             from: cardModel.CARD_COLLECTION_NAME,
             localField: "_id",
             foreignField: "boardId",
-            as: "cards",
-          },
-        },
+            as: "cards"
+          }
+        }
       ])
       .toArray();
     return result[0] || null;
@@ -87,8 +88,29 @@ const pushColumnOrderIds = async (column) => {
         { $push: { columnOrderIds: new ObjectId(column._id) } },
         { returnDocument: "after" }
       );
-    return result.value || null;
-  } catch (error) {}
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+const update = async (boardId, updatedData) => {
+  try {
+    Object.keys(updatedData).forEach((fieldName) => {
+      if (INVALID_UPDATE_FIELDS.includes(fieldName)) {
+        delete updatedData[fieldName];
+      }
+    });
+    const result = await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { _id: new ObjectId(boardId) },
+        { $set: updatedData },
+        { returnDocument: "after" }
+      );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 export const boardModel = {
   BOARD_COLLECTION_NAME,
@@ -97,4 +119,5 @@ export const boardModel = {
   findOneById,
   getDetails,
   pushColumnOrderIds,
+  update
 };
