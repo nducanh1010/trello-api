@@ -73,6 +73,11 @@ const update = async (columnId, updatedData) => {
         delete updatedData[fieldName];
       }
     });
+    if (updatedData.cardOrderIds) {
+      updatedData.cardOrderIds = updatedData.cardOrderIds.map(
+        (_id) => new ObjectId(_id)
+      );
+    }
     const result = await GET_DB()
       .collection(COLUMN_COLLECTION_NAME)
       .findOneAndUpdate(
