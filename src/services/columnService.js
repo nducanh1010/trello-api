@@ -1,4 +1,5 @@
 import { boardModel } from "~/models/boardModel";
+import { cardModel } from "~/models/cardModel";
 import { columnModel } from "~/models/columnModel";
 
 const createNew = async (reqBody) => {
@@ -32,7 +33,19 @@ const update = async (columnId, reqBody) => {
     throw error;
   }
 };
+const deleteItem = async (columnId) => {
+  try {
+    //Xoa column
+    await columnModel.deleteOneById(columnId);
+    // Xoa card
+    await cardModel.deleteManyByColumnId(columnId);
+    return { deleteResult: "Column and its cards delete Successfully" };
+  } catch (error) {
+    throw error;
+  }
+};
 export const columnService = {
   createNew,
-  update
+  update,
+  deleteItem
 };
