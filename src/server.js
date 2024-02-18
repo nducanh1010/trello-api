@@ -23,9 +23,13 @@ const START_SERVER = () => {
     Middleware xử lí lỗi tập trung
   */
   app.use(errorHandlingMiddleware);
-  app.listen(env.APP_PORT, env.APP_HOST, () => {
-    console.log(env.APP_PORT);
-  });
+  if (env.BUILD_MODE === "production") {
+    app.listen(process.env.PORT, () => {});
+  } else {
+    app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
+      console.log(env.LOCAL_DEV_APP_PORT);
+    });
+  }
 };
 CONNECT_DB()
   .then(() => {
