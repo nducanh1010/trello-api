@@ -1,6 +1,8 @@
+import { StatusCodes } from "http-status-codes";
 import { boardModel } from "~/models/boardModel";
 import { cardModel } from "~/models/cardModel";
 import { columnModel } from "~/models/columnModel";
+import ApiError from "~/utils/ApiError";
 
 const createNew = async (reqBody) => {
   try {
@@ -35,10 +37,16 @@ const update = async (columnId, reqBody) => {
 };
 const deleteItem = async (columnId) => {
   try {
+    const targetColumn = await columnModel.findOneById(columnId);
+    if (!targetColumn) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Column Not found !");
+    }
     //Xoa column
     await columnModel.deleteOneById(columnId);
     // Xoa card
     await cardModel.deleteManyByColumnId(columnId);
+    // Xoa columnId trong array columnOrderIds cua Board chua no
+    await boardModel.pullColumnOrderIds(targetColumn);
     return { deleteResult: "Column and its cards delete Successfully" };
   } catch (error) {
     throw error;
