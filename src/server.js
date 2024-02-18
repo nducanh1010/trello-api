@@ -24,7 +24,11 @@ const START_SERVER = () => {
   */
   app.use(errorHandlingMiddleware);
   if (env.BUILD_MODE === "production") {
-    app.listen(process.env.PORT, () => {});
+    app.listen(process.env.PORT, () => {
+      console.log(
+        `Hi ${env.AUTHOR}, Back end is runniing on ${process.env.PORT}`
+      );
+    });
   } else {
     app.listen(env.LOCAL_DEV_APP_PORT, env.LOCAL_DEV_APP_HOST, () => {
       console.log(env.LOCAL_DEV_APP_PORT);
